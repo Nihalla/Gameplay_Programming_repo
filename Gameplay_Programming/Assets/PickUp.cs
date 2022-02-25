@@ -62,21 +62,21 @@ public class PickUp : MonoBehaviour
             }
 
             dist = Vector3.Distance(power_up.transform.position, player_transform.position);
-            if (dist < 2)
+            if (dist < 2.5)
             {
                 if (power_up.tag == "DoubleJump")
                 {
                     //Debug.Log("got here?");
                     player_script.double_jump = true;
                     player_script.jump_boost_timer = 10f;
-                    Destroy(power_up, 0.5f);
+                    Destroy(power_up, 0f);
                 }
                 else if (power_up.tag == "SprintBuff")
                 {
                     //Debug.Log("got here?");
                     player_script.sprint_power = true;
                     player_script.speed_boost_timer = 10f;
-                    Destroy(power_up, 0.5f);
+                    Destroy(power_up, 0f);
                 }
                 else if (power_up.tag == "Weapon")
                 {

@@ -71,6 +71,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlayerRoll"",
+                    ""type"": ""Button"",
+                    ""id"": ""e973a698-447a-494d-a2ca-14abad90a0a3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -128,6 +137,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""PickUpItem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d438f3d0-a21d-49ac-8e47-cbd7ea013e68"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlayerRoll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -141,6 +161,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Gameplay_PlayerJump = m_Gameplay.FindAction("PlayerJump", throwIfNotFound: true);
         m_Gameplay_PlayerAttack = m_Gameplay.FindAction("PlayerAttack", throwIfNotFound: true);
         m_Gameplay_PickUpItem = m_Gameplay.FindAction("PickUpItem", throwIfNotFound: true);
+        m_Gameplay_PlayerRoll = m_Gameplay.FindAction("PlayerRoll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -205,6 +226,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_PlayerJump;
     private readonly InputAction m_Gameplay_PlayerAttack;
     private readonly InputAction m_Gameplay_PickUpItem;
+    private readonly InputAction m_Gameplay_PlayerRoll;
     public struct GameplayActions
     {
         private @PlayerControls m_Wrapper;
@@ -214,6 +236,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @PlayerJump => m_Wrapper.m_Gameplay_PlayerJump;
         public InputAction @PlayerAttack => m_Wrapper.m_Gameplay_PlayerAttack;
         public InputAction @PickUpItem => m_Wrapper.m_Gameplay_PickUpItem;
+        public InputAction @PlayerRoll => m_Wrapper.m_Gameplay_PlayerRoll;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -238,6 +261,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @PickUpItem.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPickUpItem;
                 @PickUpItem.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPickUpItem;
                 @PickUpItem.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPickUpItem;
+                @PlayerRoll.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRoll;
+                @PlayerRoll.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRoll;
+                @PlayerRoll.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRoll;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -257,6 +283,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @PickUpItem.started += instance.OnPickUpItem;
                 @PickUpItem.performed += instance.OnPickUpItem;
                 @PickUpItem.canceled += instance.OnPickUpItem;
+                @PlayerRoll.started += instance.OnPlayerRoll;
+                @PlayerRoll.performed += instance.OnPlayerRoll;
+                @PlayerRoll.canceled += instance.OnPlayerRoll;
             }
         }
     }
@@ -268,5 +297,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnPlayerJump(InputAction.CallbackContext context);
         void OnPlayerAttack(InputAction.CallbackContext context);
         void OnPickUpItem(InputAction.CallbackContext context);
+        void OnPlayerRoll(InputAction.CallbackContext context);
     }
 }
