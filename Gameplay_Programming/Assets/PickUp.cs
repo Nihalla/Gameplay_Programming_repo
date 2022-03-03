@@ -38,8 +38,6 @@ public class PickUp : MonoBehaviour
         power_up = this.gameObject;
 
         text_canvas.SetActive(false);
-        //jump_power = GameObject.FindGameObjectsWithTag("DoubleJump");
-        //power_up_transform = jump_power.GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -66,16 +64,19 @@ public class PickUp : MonoBehaviour
             {
                 if (power_up.tag == "DoubleJump")
                 {
-                    //Debug.Log("got here?");
                     player_script.double_jump = true;
                     player_script.jump_boost_timer = 10f;
                     Destroy(power_up, 0f);
                 }
                 else if (power_up.tag == "SprintBuff")
                 {
-                    //Debug.Log("got here?");
                     player_script.sprint_power = true;
                     player_script.speed_boost_timer = 10f;
+                    Destroy(power_up, 0f);
+                }
+                else if (power_up.tag == "HP")
+                {
+                    player_script.healthUp();
                     Destroy(power_up, 0f);
                 }
                 else if (power_up.tag == "Weapon")

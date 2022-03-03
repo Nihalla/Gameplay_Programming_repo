@@ -32,11 +32,13 @@ public class ThirdPersonMovement : MonoBehaviour
 
     [SerializeField] private GameObject jump_p;
     [SerializeField] private GameObject sprint_p;
+    [SerializeField] private GameObject health_p;
 
 
     private float global_cooldown = 1f;
     public float jump_boost_timer = 10.0f;
     public float speed_boost_timer = 10.0f;
+    private float hp_timer = 0f;
     [SerializeField] private float fall_timer = 0f;
     private int fall_damage = 5;
 
@@ -68,7 +70,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
         controls.Gameplay.CameraMove.performed += ctx => cam_move = ctx.ReadValue<Vector2>();
         controls.Gameplay.CameraMove.canceled += ctx => cam_move = Vector2.zero;
-        
+
     }
     private void Start()
     {
@@ -84,10 +86,9 @@ public class ThirdPersonMovement : MonoBehaviour
         controls.Gameplay.Disable();
     }
 
-    // Update is called once per frame 
     void Update()
     {
-        if (health <=0)
+        if (health <= 0)
         {
             alive = false;
             anim.SetBool("Alive", false);
@@ -125,6 +126,15 @@ public class ThirdPersonMovement : MonoBehaviour
                 }
             }
 
+            if (hp_timer >= 0)
+            {
+                hp_timer -= Time.deltaTime;
+                if (hp_timer <= 0)
+                {
+                    health_p.SetActive(false);
+                }
+            }
+
             if (global_cooldown >= 0)
             {
                 global_cooldown -= Time.deltaTime;
@@ -150,7 +160,6 @@ public class ThirdPersonMovement : MonoBehaviour
                         health -= fall_damage * dmg_x;
                     }
                     fall_timer = 1f;
-                    //anim.SetLayerWeight(anim.GetLayerIndex("Jump Layer"), 0);
                 }
 
             }
@@ -169,7 +178,7 @@ public class ThirdPersonMovement : MonoBehaviour
                 //Vector2 cam_m = new Vector2(cam_move.x, cam_move.y) * Time.deltaTime;
                 //offset = Quaternion.Euler(0, -cam_m.x * 100, 0) * offset;
 
-                
+
 
                 if (dir.magnitude >= 0.1f)
                 {
@@ -177,18 +186,15 @@ public class ThirdPersonMovement : MonoBehaviour
                     float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, move_angle, ref turning_vel, turning_time);
                     transform.rotation = Quaternion.Euler(0f, angle, 0f);
                     Vector3 camForward = Quaternion.Euler(0f, move_angle, 0f).normalized * Vector3.forward;
-                    //camForward = camForward;
                     mov = new Vector3(camForward.x, 0f, camForward.z);
                     controller.Move(camForward * speed * speed_boost * Time.deltaTime);
-                    //transform.Translate(camForward, Space.World);
+
                 }
 
                 if (grounded && vel.y < 0)
                 {
                     vel.y = -2f;
                 }
-
-                
 
 
                 if (dir.x < 0.1 && dir.x > -0.1 && dir.z < 0.1 && dir.z > -0.1)
@@ -215,30 +221,22 @@ public class ThirdPersonMovement : MonoBehaviour
                     }
                 }
 
-                
-
-                
-
 
                 vel.y += gravity * Time.deltaTime;
                 vel.x = dir.x;
                 vel.z = dir.z;
                 controller.Move(vel * Time.deltaTime);
             }
-            //transform.rotation.Set(transform.rotation.x, cam.transform.rotation.y, transform.rotation.z, transform.rotation.w);
         }
     }
 
     private void Jump()
     {
-       
+
         if (grounded && can_jump && alive)
         {
-            //anim.SetLayerWeight(anim.GetLayerIndex("Jump Layer"), 1);
             anim.SetBool("Grounded", false);
             anim.SetTrigger("Jump");
-            //Debug.Log("I jump");
-            
 
             vel.y = Mathf.Sqrt(jump_height * -2 * gravity);
             fall_timer += 4f;
@@ -246,29 +244,24 @@ public class ThirdPersonMovement : MonoBehaviour
         else if (!grounded && can_jump && double_jump && alive)
         {
 
-            //anim.SetLayerWeight(anim.GetLayerIndex("Jump Layer"), 1);
-            //anim.SetTrigger("Jump");
             anim.SetBool("Grounded", false);
             anim.SetBool("SecondJump", true);
-            //Debug.Log(anim.GetBool("SecondJump"));
-            
+
 
             vel.y = Mathf.Sqrt(jump_height * -2 * gravity);
             can_jump = false;
         }
-        //yield return new WaitForSeconds(2.0f);
-
     }
 
     private void Revive()
     {
-        if(!alive)
+        if (!alive)
         {
             anim.SetBool("Alive", true);
             anim.SetTrigger("Revive");
             health = 10;
             alive = true;
-            
+
             StartCoroutine(secDelay());
             fall_timer = 0f;
         }
@@ -328,7 +321,6 @@ public class ThirdPersonMovement : MonoBehaviour
         if (text_canvas.activeSelf && !has_weapon && alive)
         {
             GameObject.FindWithTag("Weapon").GetComponent<PickUp>().delete = true;
-            //anim.SetBool("Armed", true);
             idle_weapon.SetActive(true);
             has_weapon = true;
         }
@@ -340,7 +332,7 @@ public class ThirdPersonMovement : MonoBehaviour
             idle_weapon.SetActive(true);
             anim.SetBool("Armed", false);
             weapon_sheathed = true;
-            
+
 
         }
         else if (has_weapon && weapon_sheathed && alive)
@@ -352,6 +344,17 @@ public class ThirdPersonMovement : MonoBehaviour
             anim.SetBool("Armed", true);
             weapon_sheathed = false;
         }
+    }
+
+    public void healthUp()
+    {
+        if (health < 10)
+        {
+            health += 5;
+        }
+        hp_timer = 2f;
+        health_p.SetActive(true);
+        health_p.GetComponent<ParticleSystem>().Play();
     }
 
 }
