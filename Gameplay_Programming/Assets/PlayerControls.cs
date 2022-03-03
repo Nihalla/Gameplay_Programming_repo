@@ -80,6 +80,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlayerRevive"",
+                    ""type"": ""Button"",
+                    ""id"": ""f8e4d807-7fb7-49e5-a499-a877d5d78ec6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -148,6 +157,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""PlayerRoll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd6ae000-a9ea-4cc0-9356-9d24f19522b4"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlayerRevive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -162,6 +182,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Gameplay_PlayerAttack = m_Gameplay.FindAction("PlayerAttack", throwIfNotFound: true);
         m_Gameplay_PickUpItem = m_Gameplay.FindAction("PickUpItem", throwIfNotFound: true);
         m_Gameplay_PlayerRoll = m_Gameplay.FindAction("PlayerRoll", throwIfNotFound: true);
+        m_Gameplay_PlayerRevive = m_Gameplay.FindAction("PlayerRevive", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -227,6 +248,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_PlayerAttack;
     private readonly InputAction m_Gameplay_PickUpItem;
     private readonly InputAction m_Gameplay_PlayerRoll;
+    private readonly InputAction m_Gameplay_PlayerRevive;
     public struct GameplayActions
     {
         private @PlayerControls m_Wrapper;
@@ -237,6 +259,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @PlayerAttack => m_Wrapper.m_Gameplay_PlayerAttack;
         public InputAction @PickUpItem => m_Wrapper.m_Gameplay_PickUpItem;
         public InputAction @PlayerRoll => m_Wrapper.m_Gameplay_PlayerRoll;
+        public InputAction @PlayerRevive => m_Wrapper.m_Gameplay_PlayerRevive;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -264,6 +287,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @PlayerRoll.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRoll;
                 @PlayerRoll.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRoll;
                 @PlayerRoll.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRoll;
+                @PlayerRevive.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRevive;
+                @PlayerRevive.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRevive;
+                @PlayerRevive.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRevive;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -286,6 +312,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @PlayerRoll.started += instance.OnPlayerRoll;
                 @PlayerRoll.performed += instance.OnPlayerRoll;
                 @PlayerRoll.canceled += instance.OnPlayerRoll;
+                @PlayerRevive.started += instance.OnPlayerRevive;
+                @PlayerRevive.performed += instance.OnPlayerRevive;
+                @PlayerRevive.canceled += instance.OnPlayerRevive;
             }
         }
     }
@@ -298,5 +327,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnPlayerAttack(InputAction.CallbackContext context);
         void OnPickUpItem(InputAction.CallbackContext context);
         void OnPlayerRoll(InputAction.CallbackContext context);
+        void OnPlayerRevive(InputAction.CallbackContext context);
     }
 }
