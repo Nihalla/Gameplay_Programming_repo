@@ -89,6 +89,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CameraLock"",
+                    ""type"": ""Button"",
+                    ""id"": ""a722dd20-9ac1-4862-8eff-64326291c535"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -168,6 +177,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""PlayerRevive"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5a4615f6-93db-4d5d-88fd-78c04602033c"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraLock"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -183,6 +203,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Gameplay_PickUpItem = m_Gameplay.FindAction("PickUpItem", throwIfNotFound: true);
         m_Gameplay_PlayerRoll = m_Gameplay.FindAction("PlayerRoll", throwIfNotFound: true);
         m_Gameplay_PlayerRevive = m_Gameplay.FindAction("PlayerRevive", throwIfNotFound: true);
+        m_Gameplay_CameraLock = m_Gameplay.FindAction("CameraLock", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -249,6 +270,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_PickUpItem;
     private readonly InputAction m_Gameplay_PlayerRoll;
     private readonly InputAction m_Gameplay_PlayerRevive;
+    private readonly InputAction m_Gameplay_CameraLock;
     public struct GameplayActions
     {
         private @PlayerControls m_Wrapper;
@@ -260,6 +282,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @PickUpItem => m_Wrapper.m_Gameplay_PickUpItem;
         public InputAction @PlayerRoll => m_Wrapper.m_Gameplay_PlayerRoll;
         public InputAction @PlayerRevive => m_Wrapper.m_Gameplay_PlayerRevive;
+        public InputAction @CameraLock => m_Wrapper.m_Gameplay_CameraLock;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -290,6 +313,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @PlayerRevive.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRevive;
                 @PlayerRevive.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRevive;
                 @PlayerRevive.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPlayerRevive;
+                @CameraLock.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnCameraLock;
+                @CameraLock.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnCameraLock;
+                @CameraLock.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnCameraLock;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -315,6 +341,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @PlayerRevive.started += instance.OnPlayerRevive;
                 @PlayerRevive.performed += instance.OnPlayerRevive;
                 @PlayerRevive.canceled += instance.OnPlayerRevive;
+                @CameraLock.started += instance.OnCameraLock;
+                @CameraLock.performed += instance.OnCameraLock;
+                @CameraLock.canceled += instance.OnCameraLock;
             }
         }
     }
@@ -328,5 +357,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnPickUpItem(InputAction.CallbackContext context);
         void OnPlayerRoll(InputAction.CallbackContext context);
         void OnPlayerRevive(InputAction.CallbackContext context);
+        void OnCameraLock(InputAction.CallbackContext context);
     }
 }

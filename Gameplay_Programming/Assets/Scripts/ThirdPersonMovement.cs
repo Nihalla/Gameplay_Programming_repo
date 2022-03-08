@@ -12,11 +12,11 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] private float speed = 6f;
     [SerializeField] private float turning_time = 0.1f;
     private float speed_boost = 1f;
-    private float turning_vel;
+    public float turning_vel;
     private Vector3 vel;
     private Vector3 mov;
 
-    private bool grounded;
+    public bool grounded;
     private bool alive = true;
     private bool has_weapon = false;
     private bool weapon_sheathed = true;
@@ -29,10 +29,12 @@ public class ThirdPersonMovement : MonoBehaviour
     private bool can_jump = true;
     public bool sprint_power = false;
     private bool rolling = false;
+    public bool in_cinematic = false;
 
     [SerializeField] private GameObject jump_p;
     [SerializeField] private GameObject sprint_p;
     [SerializeField] private GameObject health_p;
+    private Cutscene cutscene_script;
 
 
     private float global_cooldown = 1f;
@@ -51,7 +53,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     PlayerControls controls;
     Vector2 move;
-    Vector2 cam_move;
 
     public Vector3 offset;
     private Vector3 direction;
@@ -68,8 +69,9 @@ public class ThirdPersonMovement : MonoBehaviour
         controls.Gameplay.PlayerMove.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Gameplay.PlayerMove.canceled += ctx => move = Vector2.zero;
 
-        controls.Gameplay.CameraMove.performed += ctx => cam_move = ctx.ReadValue<Vector2>();
-        controls.Gameplay.CameraMove.canceled += ctx => cam_move = Vector2.zero;
+        controls.Gameplay.CameraLock.performed += ctx => cam.GetComponent<FollowCam>().Lock();
+
+        cutscene_script = GameObject.FindWithTag("ButtonTrigger").GetComponent<Cutscene>();
 
     }
     private void Start()
@@ -93,7 +95,7 @@ public class ThirdPersonMovement : MonoBehaviour
             alive = false;
             anim.SetBool("Alive", false);
         }
-        if (alive)
+        if (alive && !in_cinematic)
         {
             if (double_jump)
             {
@@ -284,6 +286,7 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             anim.SetLayerWeight(anim.GetLayerIndex("Attack Layer"), 1);
             anim.SetTrigger("Attack");
+            cutscene_script.ButtonPress();
 
             yield return new WaitForSeconds(1f);
             anim.SetLayerWeight(anim.GetLayerIndex("Attack Layer"), 0);

@@ -8,6 +8,8 @@ TagManager:
   - SprintBuff
   - Weapon
   - HP
+  - ButtonTrigger
+  - Lookable
   layers:
   - Default
   - TransparentFX
@@ -16,7 +18,7 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
+  - Button
   - 
   - 
   - 
