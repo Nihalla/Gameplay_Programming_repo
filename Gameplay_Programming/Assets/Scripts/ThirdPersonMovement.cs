@@ -17,6 +17,7 @@ public class ThirdPersonMovement : MonoBehaviour
     private Vector3 mov;
 
     public bool grounded;
+    public bool in_spline = true;
     private bool alive = true;
     private bool has_weapon = false;
     private bool weapon_sheathed = true;
@@ -171,26 +172,46 @@ public class ThirdPersonMovement : MonoBehaviour
                 fall_timer -= Time.deltaTime * 2f;
             }
 
-
-            Vector3 dir = new Vector3(move.x, 0f, move.y).normalized;
-            direction = dir;
             if (!rolling)
             {
-                Vector2 m = new Vector2(move.x, move.y) * Time.deltaTime;
-                //Vector2 cam_m = new Vector2(cam_move.x, cam_move.y) * Time.deltaTime;
-                //offset = Quaternion.Euler(0, -cam_m.x * 100, 0) * offset;
+                Vector3 dir = new Vector3(move.x, 0f, move.y).normalized;
 
-
-
-                if (dir.magnitude >= 0.1f)
+                if (!in_spline)
                 {
-                    float move_angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg + cam.GetComponent<Transform>().eulerAngles.y;
-                    float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, move_angle, ref turning_vel, turning_time);
-                    transform.rotation = Quaternion.Euler(0f, angle, 0f);
-                    Vector3 camForward = Quaternion.Euler(0f, move_angle, 0f).normalized * Vector3.forward;
-                    mov = new Vector3(camForward.x, 0f, camForward.z);
-                    controller.Move(camForward * speed * speed_boost * Time.deltaTime);
+                    Vector2 m = new Vector2(move.x, move.y) * Time.deltaTime;
 
+                    //Vector2 cam_m = new Vector2(cam_move.x, cam_move.y) * Time.deltaTime;
+                    //offset = Quaternion.Euler(0, -cam_m.x * 100, 0) * offset;
+
+
+
+                    if (dir.magnitude >= 0.1f)
+                    {
+                        float move_angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg + cam.GetComponent<Transform>().eulerAngles.y;
+                        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, move_angle, ref turning_vel, turning_time);
+                        transform.rotation = Quaternion.Euler(0f, angle, 0f);
+                        Vector3 camForward = Quaternion.Euler(0f, move_angle, 0f).normalized * Vector3.forward;
+                        mov = new Vector3(camForward.x, 0f, camForward.z);
+                        controller.Move(camForward * speed * speed_boost * Time.deltaTime);
+
+                    }
+                }
+                else
+                {
+                    //in_spline = true;
+                    if (move.x > 0.8 || move.x < -0.8)
+                    {
+                        direction = new Vector3(move.x, 0f, 0f).normalized;
+                        if (direction.magnitude >= 0.1f)
+                        {
+                            float move_angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.GetComponent<Transform>().eulerAngles.y;
+                            //float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, move_angle, ref turning_vel, turning_time);
+                            transform.rotation = Quaternion.Euler(0f, move_angle, 0f);
+                            Vector3 camForward = Quaternion.Euler(0f, move_angle, 0f).normalized * Vector3.forward;
+                            mov = new Vector3(camForward.x, 0f, 0f);
+                            controller.Move(camForward * speed * speed_boost * Time.deltaTime);
+                        }
+                    }
                 }
 
                 if (grounded && vel.y < 0)
@@ -225,7 +246,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
 
                 vel.y += gravity * Time.deltaTime;
-                vel.x = dir.x;
+                vel.x = dir.x;    
                 vel.z = dir.z;
                 controller.Move(vel * Time.deltaTime);
             }
