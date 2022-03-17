@@ -6722,6 +6722,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   follow_target: {fileID: 1618661823}
+  looking_target: {fileID: 0}
+  looking_transform: {fileID: 0}
   offset: {x: 0, y: -0.37, z: 0}
 --- !u!1 &999442360 stripped
 GameObject:
@@ -7876,6 +7878,8 @@ MonoBehaviour:
   speed: 6
   turning_time: 0.1
   turning_vel: 0
+  grounded: 0
+  in_spline: 0
   ground_dist: 0.1
   ground_mask:
     serializedVersion: 2

@@ -17,7 +17,7 @@ public class ThirdPersonMovement : MonoBehaviour
     private Vector3 mov;
 
     public bool grounded;
-    public bool in_spline = true;
+    public bool in_spline = false;
     private bool alive = true;
     private bool has_weapon = false;
     private bool weapon_sheathed = true;

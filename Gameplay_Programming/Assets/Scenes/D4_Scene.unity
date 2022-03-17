@@ -7883,6 +7883,7 @@ MonoBehaviour:
   turning_time: 0.1
   turning_vel: 0
   grounded: 0
+  in_spline: 0
   ground_dist: 0.1
   ground_mask:
     serializedVersion: 2

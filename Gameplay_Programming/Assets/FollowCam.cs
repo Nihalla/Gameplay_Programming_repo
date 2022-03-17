@@ -70,7 +70,7 @@ public class FollowCam : MonoBehaviour
 
         Vector3 LocalRight = follow_target.transform.worldToLocalMatrix.MultiplyVector(transform.right);
 
-        if (((angleBetween > 80.0f) && (m.y < 0)) || ((angleBetween < 160.0f) && (m.y > 0)))
+        if (((angleBetween > 90.0f) && (m.y < 0)) || ((angleBetween < 160.0f) && (m.y > 0)))
         {
             offset = Quaternion.AngleAxis(m.y * 100, LocalRight) * offset;
         }
