@@ -58,7 +58,6 @@ public class FollowCam : MonoBehaviour
             Debug.Log(transform.rotation.x);
             if (transform.rotation.x >= 0.15f && player.GetComponent<ThirdPersonMovement>().grounded)
             {
-                //Debug.Log("???");
                 looking_transform = follow_target.transform;
                 locked = false;
             }

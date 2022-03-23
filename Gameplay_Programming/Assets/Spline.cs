@@ -22,6 +22,14 @@ public class Spline : MonoBehaviour
 
     void Update()
     {
+        spline_count = transform.childCount;
+        spline_point = new Vector3[spline_count];
+
+        for (int i = 0; i < spline_count; i++)
+        {
+            spline_point[i] = transform.GetChild(i).position;
+        }
+
         for (int i = 0; i < spline_count; i++)
         {
             if (i + 1 < spline_count)

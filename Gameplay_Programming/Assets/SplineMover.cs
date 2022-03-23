@@ -16,7 +16,9 @@ public class SplineMover : MonoBehaviour
 
     void Update()
     {
-        obj_transform.position = spline.whereOnSpline(follow_obj.position);
-        transform.LookAt(looking_target.transform);
+        
+            obj_transform.position = spline.whereOnSpline(follow_obj.position);
+            transform.LookAt(looking_target.transform);
+        
     }
 }
