@@ -18,7 +18,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public bool grounded;
     public bool in_spline = false;
-    private bool alive = true;
+    public bool alive = true;
     private bool has_weapon = false;
     private bool weapon_sheathed = true;
     [SerializeField] private float ground_dist;
@@ -35,6 +35,7 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] private GameObject jump_p;
     [SerializeField] private GameObject sprint_p;
     [SerializeField] private GameObject health_p;
+    [SerializeField] private GameObject dmg_p;
     private Cutscene cutscene_script;
 
 
@@ -42,6 +43,7 @@ public class ThirdPersonMovement : MonoBehaviour
     public float jump_boost_timer = 10.0f;
     public float speed_boost_timer = 10.0f;
     private float hp_timer = 0f;
+    private float dmg_timer = 0f;
     [SerializeField] private float fall_timer = 0f;
     private int fall_damage = 5;
 
@@ -60,6 +62,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void Awake()
     {
+        weapon.GetComponent<BoxCollider>().isTrigger = true;
         controls = new PlayerControls();
         controls.Gameplay.PlayerJump.performed += ctx => Jump();
         controls.Gameplay.PickUpItem.performed += ctx => weaponAction();
@@ -135,6 +138,14 @@ public class ThirdPersonMovement : MonoBehaviour
                 if (hp_timer <= 0)
                 {
                     health_p.SetActive(false);
+                }
+            }
+            if (dmg_timer >= 0)
+            {
+                dmg_timer -= Time.deltaTime;
+                if(dmg_timer <= 0)
+                {
+                    dmg_p.SetActive(false);
                 }
             }
 
@@ -307,10 +318,12 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             anim.SetLayerWeight(anim.GetLayerIndex("Attack Layer"), 1);
             anim.SetTrigger("Attack");
+            weapon.GetComponent<BoxCollider>().isTrigger = false;
             cutscene_script.ButtonPress();
 
             yield return new WaitForSeconds(1f);
             anim.SetLayerWeight(anim.GetLayerIndex("Attack Layer"), 0);
+            weapon.GetComponent<BoxCollider>().isTrigger = true;
             global_cooldown = 1f;
         }
     }
@@ -379,6 +392,16 @@ public class ThirdPersonMovement : MonoBehaviour
         hp_timer = 2f;
         health_p.SetActive(true);
         health_p.GetComponent<ParticleSystem>().Play();
+    }
+
+
+
+    public void takeDMG()
+    {
+        dmg_timer = 2f;
+        health -= 2;
+        dmg_p.SetActive(true);
+        dmg_p.GetComponent<ParticleSystem>().Play();
     }
 
 }

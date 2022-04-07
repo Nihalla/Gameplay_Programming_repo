@@ -9,16 +9,18 @@ public class PlatformMove : MonoBehaviour
     [SerializeField] private Transform pos2;
     [SerializeField] private Transform pos3;
     [SerializeField] private Transform pos4;
-   
+
     private float interpolation_float;
     [SerializeField] private float time;
     private float step;
     public bool forward = true;
     private float movementDirection = 1.0f;
+    private float pause_timer = 5.0f;
+    private bool can_move = true;
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -26,34 +28,75 @@ public class PlatformMove : MonoBehaviour
     {
         //Debug.Log("Current position" + this.transform.position);
         //Debug.Log("Connection to fourth point" + pos4.position);
-        
+
         step = 1 / time;
 
         if (Vector3.Distance(transform.position, pos1.position) <= step)
         {
             forward = true;
             movementDirection = 1.0f;
-            //Debug.Log("Connection to first point" + pos1.position);
-        }    
-        if (/*this.transform.position == pos4.position*/ Vector3.Distance(transform.position, pos4.position) <= step)
+        }
+        if (Vector3.Distance(transform.position, pos4.position) <= step)
         {
             movementDirection = -1.0f;
             forward = false;
-            //Debug.Log("Connection to fourth point" + pos4.position);
-        }    
-        step = 1 / time;
-        interpolation_float = (interpolation_float + movementDirection * Time.deltaTime) % time;
+            //can_move = false;
+        }
 
-        /*if(forward)
+        /*if (Vector3.Distance(transform.position, pos1.position) <= step)
         {
+
+            //can_move = false;
+            forward = true;
+            movementDirection = 1.0f;
+            if (Vector3.Distance(transform.position, pos1.position) <= 0.5f && (can_move))
+            {
+                time = 6.0f;
+            }
+            //can_move = true;
+            //Debug.Log(Vector3.Distance(transform.position, pos1.position));
+        }
+        if (Vector3.Distance(transform.position, pos4.position) <= step)
+        {
+                //can_move = false;
+            movementDirection = -1.0f;
+            forward = false;
+            if (Vector3.Distance(transform.position, pos1.position) <= 0.5f && (!can_move))
+            {
+                time = 6.0f;
+            }
+            //can_move = true;
+            //Debug.Log("Connection to fourth point" + pos4.position);
+        }*/
+        if (can_move)
+        {
+            interpolation_float = (interpolation_float + movementDirection * Time.deltaTime) % time;
+
+            /*if(forward)
+            {
+                this.transform.position = CubeLerp(pos1.position, pos2.position, pos3.position, pos4.position, interpolation_float * step);
+            }
+            else
+            {
+                this.transform.position = CubeLerp(pos4.position, pos3.position, pos2.position, pos1.position, interpolation_float * step);
+            }*/
+
             this.transform.position = CubeLerp(pos1.position, pos2.position, pos3.position, pos4.position, interpolation_float * step);
         }
         else
         {
-            this.transform.position = CubeLerp(pos4.position, pos3.position, pos2.position, pos1.position, interpolation_float * step);
-        }*/
+            timer();
+        }
+        /*pause_timer -= Time.deltaTime;
+        if (pause_timer <= 0)
+        {
+            //can_move = true;
+            pause_timer = 0.5f;
+            time = 2.0f;
 
-        this.transform.position = CubeLerp(pos1.position, pos2.position, pos3.position, pos4.position, interpolation_float * step);
+        }  */
+
+
     }
     private Vector3 QuadLerp(Vector3 a, Vector3 b, Vector3 c, float t)
     {
@@ -71,4 +114,15 @@ public class PlatformMove : MonoBehaviour
         return Vector3.Slerp(ab_bc, bc_cd, interpolation_float * step);
     }
 
+    private void timer()
+    {
+        pause_timer -= Time.deltaTime;
+        if (pause_timer <= 0)
+        {
+            this.transform.position = pos1.position;
+            can_move = true;
+            pause_timer = 5.0f;
+            
+        }
+    }
 }

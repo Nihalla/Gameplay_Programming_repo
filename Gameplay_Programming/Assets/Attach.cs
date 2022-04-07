@@ -5,6 +5,7 @@ using UnityEngine;
 public class Attach : MonoBehaviour
 {
     private GameObject player;
+    private Transform temp;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +17,11 @@ public class Attach : MonoBehaviour
     {
         if (other == player.GetComponent<Collider>())
         {
-            player.transform.parent = this.transform;
+            temp = player.transform;
+            player.transform.rotation = this.transform.rotation;
+            player.transform.SetParent(this.transform, true);
+            player.transform.rotation = temp.rotation;
+            //player.transform.localScale = 1 / this.transform.localScale;
         }
     }
 
@@ -24,7 +29,7 @@ public class Attach : MonoBehaviour
     {
         if (other == player.GetComponent<Collider>())
         {
-            player.transform.parent = null;
+            player.transform.SetParent(null); 
         }
     }
 }

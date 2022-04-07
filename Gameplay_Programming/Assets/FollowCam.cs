@@ -55,12 +55,17 @@ public class FollowCam : MonoBehaviour
             Vector3 midPoint = (follow_target.transform.position + obj.transform.position) / 2f;
             looking_target.transform.position = midPoint;
             looking_transform = looking_target.transform;
-            Debug.Log(transform.rotation.x);
+            //Debug.Log(transform.rotation.x);
             if (transform.rotation.x >= 0.15f && player.GetComponent<ThirdPersonMovement>().grounded)
             {
                 looking_transform = follow_target.transform;
                 locked = false;
             }
+            /*if (obj == null)
+            {
+                looking_transform = follow_target.transform;
+                locked = false;
+            }*/
         }
         Vector2 m = new Vector2(move.x, move.y) * Time.deltaTime;
  
@@ -106,5 +111,11 @@ public class FollowCam : MonoBehaviour
             looking_transform = follow_target.transform;
             locked = false;
         }
+    }
+
+    public void Unlock()
+    {
+        looking_transform = follow_target.transform;
+        locked = false;
     }
 }
