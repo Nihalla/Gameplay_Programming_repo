@@ -34,7 +34,7 @@ public class AI_Controller : MonoBehaviour
     [SerializeField] private bool player_in_sight = false;
     //private float min_dist = 3;
     //private float min_dist = 3;
-    private float max_dist = 4;
+    public float max_dist = 4;
     private float turning_speed = 1;
     private float movement_speed = 4;
     private float idle_time = 5;

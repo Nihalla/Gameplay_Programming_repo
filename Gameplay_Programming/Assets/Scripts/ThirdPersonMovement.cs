@@ -399,7 +399,7 @@ public class ThirdPersonMovement : MonoBehaviour
     public void takeDMG()
     {
         dmg_timer = 2f;
-        health -= 2;
+        health -= 1;
         dmg_p.SetActive(true);
         dmg_p.GetComponent<ParticleSystem>().Play();
     }
